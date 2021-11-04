@@ -31,6 +31,7 @@ scale_fill_discrete = scale_fill_viridis_d
 
 ```{r}
 x_vec = rnorm(25, mean = 5, sd = 4)
+y_vec = rnorm(25, mean = 10, sd = 4)
 
 (x_vec - mean(x_vec)) / sd(x_vec)
 
@@ -72,5 +73,32 @@ z_scores(3)
 z_scores("my", "name", "is", "jeff")
 
 z_scores(mtcars)
+```
+
+
+## Multiple outputs
+
+```{r}
+mean_and_sd <- function(x) {
+  if(!is.numeric(x)){
+    stop("Argument x should be numeric")
+  }
+  
+  if(length(x) < 3){
+    stop("Z scores cannot be computed for length 1 vectors")
+  }
+  mean_x <- mean(x)
+  sd_x <- sd(x)
+  
+  output_df <- 
+    tibble(
+      mean = mean_x,
+      sd = sd_x
+    )
+  return(output_df)
+  
+}
+
+mean_and_sd(x_vec)
 ```
 
