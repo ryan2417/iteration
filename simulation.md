@@ -1,7 +1,7 @@
 Simulation
 ================
 Ruiqi Yan
-11/6/2021
+11/11/2021
 
 ## Let’s simulate something
 
@@ -29,7 +29,7 @@ sim_mean_sd(30)
     ## # A tibble: 1 × 2
     ##   mu_hat sigma_hat
     ##    <dbl>     <dbl>
-    ## 1   3.96      4.52
+    ## 1   2.95      4.10
 
 ## let’s simulate a lot
 
@@ -50,16 +50,16 @@ bind_rows(output)
     ## # A tibble: 100 × 2
     ##    mu_hat sigma_hat
     ##     <dbl>     <dbl>
-    ##  1   2.97      3.39
-    ##  2   2.50      4.04
-    ##  3   2.79      3.83
-    ##  4   2.44      4.29
-    ##  5   2.74      4.15
-    ##  6   3.04      3.42
-    ##  7   3.00      4.56
-    ##  8   3.78      4.46
-    ##  9   2.43      3.01
-    ## 10   3.67      4.41
+    ##  1   3.05      4.49
+    ##  2   3.05      3.73
+    ##  3   4.24      2.70
+    ##  4   4.21      4.14
+    ##  5   2.75      3.80
+    ##  6   2.66      3.86
+    ##  7   3.78      4.23
+    ##  8   2.79      4.20
+    ##  9   3.81      3.16
+    ## 10   2.56      3.39
     ## # … with 90 more rows
 
 Let’s use a loop function
@@ -90,7 +90,7 @@ sim_results %>%
     ## # A tibble: 1 × 2
     ##   avg_samp_mean sd_samp_mean
     ##           <dbl>        <dbl>
-    ## 1          2.96        0.741
+    ## 1          2.99        0.650
 
 ``` r
 sim_results %>% 
@@ -99,3 +99,5 @@ sim_results %>%
 ```
 
 ![](simulation_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
+
+## Let’s try other sample sizes
