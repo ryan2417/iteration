@@ -29,7 +29,7 @@ sim_mean_sd(30)
     ## # A tibble: 1 × 2
     ##   mu_hat sigma_hat
     ##    <dbl>     <dbl>
-    ## 1   2.95      4.10
+    ## 1   2.98      3.30
 
 ## let’s simulate a lot
 
@@ -50,16 +50,16 @@ bind_rows(output)
     ## # A tibble: 100 × 2
     ##    mu_hat sigma_hat
     ##     <dbl>     <dbl>
-    ##  1   3.05      4.49
-    ##  2   3.05      3.73
-    ##  3   4.24      2.70
-    ##  4   4.21      4.14
-    ##  5   2.75      3.80
-    ##  6   2.66      3.86
-    ##  7   3.78      4.23
-    ##  8   2.79      4.20
-    ##  9   3.81      3.16
-    ## 10   2.56      3.39
+    ##  1   3.65      4.25
+    ##  2   2.61      3.71
+    ##  3   2.78      4.45
+    ##  4   1.40      4.15
+    ##  5   2.91      4.89
+    ##  6   3.09      3.28
+    ##  7   4.27      4.26
+    ##  8   2.36      4.14
+    ##  9   2.73      3.73
+    ## 10   3.53      3.81
     ## # … with 90 more rows
 
 Let’s use a loop function
@@ -90,7 +90,7 @@ sim_results %>%
     ## # A tibble: 1 × 2
     ##   avg_samp_mean sd_samp_mean
     ##           <dbl>        <dbl>
-    ## 1          2.99        0.650
+    ## 1          3.01        0.755
 
 ``` r
 sim_results %>% 
@@ -101,3 +101,62 @@ sim_results %>%
 ![](simulation_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
 
 ## Let’s try other sample sizes
+
+``` r
+n_list <- list(
+  "n = 30" = 30,
+  "n = 60" = 60,
+  "n = 120" = 120,
+  "n = 240" = 240
+)
+
+output <- vector("list", length = 4)
+
+for(i in 1:4){
+  output[[i]] <- rerun(100, sim_mean_sd(n = n_list[[i]])) %>% bind_rows()
+}
+```
+
+``` r
+sim_results <-
+  tibble(
+  sample_size = c(30, 60, 120, 240),
+) %>% 
+  mutate(
+    output_list = map(.x = sample_size, ~rerun(1000, sim_mean_sd(n = .x))),
+    estimate_df = map(output_list, bind_rows)
+  ) %>% 
+  select(-output_list) %>% 
+  unnest(estimate_df)
+```
+
+Do some data frame things.
+
+``` r
+sim_results %>% 
+  mutate(
+    sample_size = str_c("n = ", sample_size),
+    sample_size = fct_inorder(sample_size)
+  ) %>% 
+  ggplot(aes(x = sample_size, y = mu_hat)) +
+  geom_violin()
+```
+
+![](simulation_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+``` r
+sim_results %>% 
+  group_by(sample_size) %>% 
+  summarize(
+    avg_samp_mean = mean(mu_hat),
+    sd_samp_mean = sd(mu_hat)
+  )
+```
+
+    ## # A tibble: 4 × 3
+    ##   sample_size avg_samp_mean sd_samp_mean
+    ##         <dbl>         <dbl>        <dbl>
+    ## 1          30          3.01        0.705
+    ## 2          60          3.01        0.511
+    ## 3         120          3.02        0.360
+    ## 4         240          3.01        0.252
