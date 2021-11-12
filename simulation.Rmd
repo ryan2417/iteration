@@ -1,0 +1,93 @@
+---
+title: "Simulation"
+author: "Ruiqi Yan"
+date: "11/6/2021"
+output: github_document
+---
+
+```{r, include = FALSE}
+library(tidyverse)
+
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE
+)
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_colour_viridis_d(option = "viridis")
+scale_fill_discrete = scale_fill_viridis_d(option = "viridis")
+```
+
+## Let's simulate something
+
+```{r}
+sim_mean_sd = function(n, mu = 3, sigma = 4) {
+  
+  sim_data = tibble(
+    x = rnorm(n, mean = mu, sd = sigma),
+  )
+  
+  sim_data %>% 
+    summarize(
+      mu_hat = mean(x),
+      sigma_hat = sd(x)
+    )
+}
+
+
+```
+
+I can "simulate" by running this line.
+
+```{r}
+sim_mean_sd(30)
+```
+
+## let's simulate a lot
+
+Let's start with a for loop
+
+```{r}
+
+output <- vector("list", length = 100)
+
+for(i in 1:100){
+  
+  output[[i]] <- sim_mean_sd(n=30)
+  
+}
+
+bind_rows(output)
+```
+
+Let's use a loop function
+
+```{r}
+sim_results <- rerun(100, sim_mean_sd(n = 30)) %>% 
+  bind_rows()
+```
+
+Let's look at results...
+
+```{r}
+sim_results %>% 
+  ggplot(aes(x = mu_hat)) +
+  geom_density()
+
+sim_results %>% 
+  summarize(
+    avg_samp_mean = mean(mu_hat),
+    sd_samp_mean = sd(mu_hat)
+  )
+
+sim_results %>% 
+  ggplot(aes(x = sigma_hat)) +
+  geom_density()
+```
+
